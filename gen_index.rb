@@ -16,6 +16,8 @@ def remove_index
     File.unlink path
   end
 end
+remove_index # remove previously generated html
+
 dir = $inputdir
 Find.find(dir) do |f|
   next unless File.directory?(f)
