@@ -9,8 +9,8 @@ require 'erubis'
 
 
 $inputdir = File.expand_path ARGV[0]
-DOMAIN = ARGV[1] || 'http://pengyou.rijiben.org/'
-p DOMAIN
+DOMAIN = ARGV[1] || 'http://example.com/'
+p "DOMAIN is: " DOMAIN
 def remove_index
   Find.find(File.expand_path($inputdir)) do |path|
     next unless File.basename(path) == 'index.html'
