@@ -4,11 +4,13 @@ require 'fileutils'
 require 'cgi'
 require 'find'
 require 'erubis'
-# USAGE: ruby script.rb input-dir
+# USAGE: ruby script.rb input-dir domain-name
 # 脚本进入dir，生成文件列表index.html
 
-DOMAIN = 'http://pengyou.rijiben.org/'
+
 $inputdir = File.expand_path ARGV[0]
+DOMAIN = ARGV[1] || 'http://pengyou.rijiben.org/'
+p DOMAIN
 def remove_index
   Find.find(File.expand_path($inputdir)) do |path|
     next unless File.basename(path) == 'index.html'
