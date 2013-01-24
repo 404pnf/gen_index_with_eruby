@@ -15,6 +15,6 @@
     </ul>
   </body>
   <footer>
-    <a href=<%= DOMAIN %>>主页</a>
+    <a href="<%= DOMAIN %>">主页</a>
   </footer>
 </html>
