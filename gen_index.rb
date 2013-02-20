@@ -26,6 +26,8 @@ Find.find(dir) do |f|
   # filelist is an array holds filename
   filelist = Dir.entries(f) # filelist is an array with all files include '.' and '..'
     .reject! {|i| i == '.' or i == '..'}
+  # sort filelist
+  filelist.sort!
   # urls is an array holds CGI::escapde filenames
   urls= filelist.map do |filename|
     CGI::escape(filename)
