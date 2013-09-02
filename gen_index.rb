@@ -22,6 +22,7 @@ def gen_index dir
     next unless File.directory?(f)
 
     filelist = Dir.entries(f).reject! {|i| i == '.' or i == '..'}
+    # links is nested array with filename and its CGI escaped filename
     links = filelist.sort.map { |filename| [filename, CGI::escape(filename)] }
     #p links
 
@@ -38,6 +39,7 @@ def gen_index dir
   end
 end
 
+p "inputdir is #{inputdir}"
 p "DOMAIN is: #{DOMAIN}" 
 remove_index inputdir # remove previously generated html
 gen_index inputdir
