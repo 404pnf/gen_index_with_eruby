@@ -1,5 +1,3 @@
-#! /usr/bin/env ruby
-# -*- coding: utf-8 -*-
 require 'fileutils'
 require 'cgi'
 require 'find'
@@ -8,45 +6,40 @@ require 'erubis'
 # 脚本进入dir，生成文件列表index.html
 
 
-$inputdir = File.expand_path ARGV[0]
+inputdir = File.expand_path ARGV[0] || '/tmp'
 DOMAIN = ARGV[1] || 'http://example.com/'
-p "DOMAIN is: " DOMAIN
-def remove_index
-  Find.find(File.expand_path($inputdir)) do |path|
+
+def remove_index inputdir
+  Find.find(inputdir) do |path|
     next unless File.basename(path) == 'index.html'
     p "remove #{path}"
     File.unlink path
   end
 end
-remove_index # remove previously generated html
 
-dir = $inputdir
-Find.find(dir) do |f|
-  next unless File.directory?(f)
-  # filelist is an array holds filename
-  filelist = Dir.entries(f) # filelist is an array with all files include '.' and '..'
-    .reject! {|i| i == '.' or i == '..'}
-  # sort filelist
-  filelist.sort!
-  # urls is an array holds CGI::escapde filenames
-  urls= filelist.map do |filename|
-    CGI::escape(filename)
-    # url = URI::encode(fn)  在ruby 1.9中会报 URI.escape is obsolete 过时啦
-    end
-  # zip it up :)
-  links = filelist.zip  urls
-  p links
+def gen_index dir
+  Find.find(dir) do |f|
+    next unless File.directory?(f)
 
-  title = f.to_s.split('/').last
+    filelist = Dir.entries(f).reject! {|i| i == '.' or i == '..'}
+    links = filelist.sort.map { |filename| [filename, CGI::escape(filename)] }
+    #p links
 
-  # here comes erubis
-  input = File.read('index.eruby')
-  eruby = Erubis::Eruby.new(input)    # create Eruby object
-  index_html =  eruby.result(binding())        # get result  
+    *_, title = f.to_s.split('/')
 
-  # same old file writing
-  p "generating #{f}/index.html"
-  File.open("#{f}/index.html", "w") do |file|
-    file.puts index_html
+    # here comes erubis
+    input = File.read('index.eruby')
+    eruby = Erubis::Eruby.new(input)    # create Eruby object
+    index_html =  eruby.result(binding())        # get result  
+
+    # same old file writing
+    p "generating #{f}/index.html"
+    File.write("#{f}/index.html", index_html)
   end
 end
+
+p "DOMAIN is: #{DOMAIN}" 
+remove_index inputdir # remove previously generated html
+gen_index inputdir
+
+
