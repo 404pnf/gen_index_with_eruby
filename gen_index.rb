@@ -21,7 +21,7 @@ def gen_index(dir)
     next unless File.directory?(f)
 
     *_, title = f.to_s.split('/')
-    filelist = Dir.entries(f).reject! { |i| i == '.' || i == '..' }
+    filelist = Dir[f] # unlike Dir.entires, Dir.glob doesn't return unix hidden file: . and ..
     links = filelist.sort.map { |filename| [filename, CGI.escape(filename)] }
 
     input = File.read('index.eruby')
