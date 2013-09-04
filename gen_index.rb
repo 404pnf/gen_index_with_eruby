@@ -38,4 +38,3 @@ if __FILE__ == $PROGRAM_NAME
   remove_index inputdir
   gen_index inputdir
 end
-
